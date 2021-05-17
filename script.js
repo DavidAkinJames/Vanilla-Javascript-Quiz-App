@@ -1,38 +1,32 @@
 const startButton = document.getElementById('start-btn')
-
 const nextButton = document.getElementById('next-btn')
-
-const questionsContainerElement = document.getElementById('question-container')
-
+const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
-
-const answerButtonElement = document.getElementById('answer-buttons')
+const answerButtonsElement = document.getElementById('answer-buttons')
 
 let shuffledQuestions, currentQuestionIndex
 
 startButton.addEventListener('click', startGame)
-nextButton.addEventListener('click', ()=> {
+nextButton.addEventListener('click', () => {
+  currentQuestionIndex++
   setNextQuestion()
 })
 
-
-function startGame () {
-   startButton.classList.add('hide')
-   shuffledQuestions = questions.sort(() => Math.random() - .5)
-   currentQuestionIndex = 0
-   questionsContainerElement.classList.remove('hide')
-   setNextQuestion()
+function startGame() {
+  startButton.classList.add('hide')
+  shuffledQuestions = questions.sort(() => Math.random() - .5)
+  currentQuestionIndex = 0
+  questionContainerElement.classList.remove('hide')
+  setNextQuestion()
 }
-
 
 function setNextQuestion() {
   resetState()
-   showQuestions(shuffledQuestions[currentQuestionIndex])
+  showQuestion(shuffledQuestions[currentQuestionIndex])
 }
 
-
-function showQuestions(question) {
-  questionElement.innerText =  question.question
+function showQuestion(question) {
+  questionElement.innerText = question.question
   question.answers.forEach(answer => {
     const button = document.createElement('button')
     button.innerText = answer.text
@@ -40,57 +34,47 @@ function showQuestions(question) {
     if (answer.correct) {
       button.dataset.correct = answer.correct
     }
-
     button.addEventListener('click', selectAnswer)
-    answerButtonElement.appendChild(button)
+    answerButtonsElement.appendChild(button)
   })
 }
-
 
 function resetState() {
   clearStatusClass(document.body)
   nextButton.classList.add('hide')
-  while(answerButtonElement.firstChild) {
-    answerButtonElement.removeChild(answerButtonElement.firstChild)
+  while (answerButtonsElement.firstChild) {
+    answerButtonsElement.removeChild(answerButtonsElement.firstChild)
   }
 }
-
-
 
 function selectAnswer(e) {
   const selectedButton = e.target
   const correct = selectedButton.dataset.correct
   setStatusClass(document.body, correct)
-  Array.from(answerButtonElement.children).forEach(button => {
+  Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
   })
-  
-  if(shuffledQuestions.length > currentQuestionIndex + 1){
+  if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
-  } else{
+  } else {
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
   }
-
-  nextButton.classList.remove('hide')
 }
 
-
 function setStatusClass(element, correct) {
-  clearStatusClass(element) 
-  if(correct) {
+  clearStatusClass(element)
+  if (correct) {
     element.classList.add('correct')
   } else {
     element.classList.add('wrong')
   }
 }
 
-
 function clearStatusClass(element) {
   element.classList.remove('correct')
   element.classList.remove('wrong')
 }
-
 
 const questions = [
   {
@@ -126,12 +110,11 @@ const questions = [
     ]
   },
   {
-    question: 'Capital of Nigeria',
+    question: 'Greatest Footballer of all time?',
     answers: [
-      {text: 'Cairo', correct: false},
-      {text: 'Abuja', correct: true},
-      {text: 'Paris', correct: false},
-      {text: 'Accra', correct: false}
+      { text: 'Cristaino Ronaldo', correct: true},
+      { text: 'Lionel Messi', correct: false},
+      { text: 'Jay Jay Okocha', correct: false}
     ]
   }
 ]
